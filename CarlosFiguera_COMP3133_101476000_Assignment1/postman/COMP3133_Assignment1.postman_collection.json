@@ -1,0 +1,247 @@
+{
+  "info": {
+    "name": "COMP3133 Assignment 1 - GraphQL",
+    "_postman_id": "d4c4d9c0-2b31-4a3a-9f8f-101476000000",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Signup",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"mutation Signup($input: SignupInput!) { signup(input: $input) { success message token user { _id username email created_at updated_at } } }\",\n  \"variables\": {\n    \"input\": {\n      \"username\": \"carlos\",\n      \"email\": \"carlos@example.com\",\n      \"password\": \"Password123\"\n    }\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"query Login($usernameOrEmail: String!, $password: String!) { login(usernameOrEmail: $usernameOrEmail, password: $password) { success message token user { _id username email } } }\",\n  \"variables\": {\n    \"usernameOrEmail\": \"carlos\",\n    \"password\": \"Password123\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get All Employees",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"query { getAllEmployees { success message employees { _id first_name last_name email gender designation salary date_of_joining department employee_photo } } }\",\n  \"variables\": {}\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Add New Employee",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"mutation Add($input: EmployeeInput!) { addNewEmployee(input: $input) { success message employee { _id first_name last_name email designation department employee_photo } } }\",\n  \"variables\": {\n    \"input\": {\n      \"first_name\": \"John\",\n      \"last_name\": \"Doe\",\n      \"email\": \"john.doe@example.com\",\n      \"gender\": \"Male\",\n      \"designation\": \"Developer\",\n      \"salary\": 5000,\n      \"date_of_joining\": \"2025-01-01\",\n      \"department\": \"IT\",\n      \"employee_photo\": \"data:image/png;base64,REPLACE_WITH_BASE64\"\n    }\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Search Employee by EID",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"query ($eid: ID!) { searchEmployeeByEid(eid: $eid) { success message employee { _id first_name last_name email designation department } } }\",\n  \"variables\": {\n    \"eid\": \"{{eid}}\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update Employee by EID",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"mutation ($eid: ID!, $input: EmployeeUpdateInput!) { updateEmployeeByEid(eid: $eid, input: $input) { success message employee { _id first_name last_name email designation department salary } } }\",\n  \"variables\": {\n    \"eid\": \"{{eid}}\",\n    \"input\": {\n      \"salary\": 6500,\n      \"designation\": \"Senior Developer\"\n    }\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete Employee by EID",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"mutation ($eid: ID!) { deleteEmployeeByEid(eid: $eid) { success message deleted_id } }\",\n  \"variables\": {\n    \"eid\": \"{{eid}}\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Search Employees by Designation or Department",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"query ($designation: String, $department: String) { searchEmployees(designation: $designation, department: $department) { success message employees { _id first_name last_name email designation department } } }\",\n  \"variables\": {\n    \"designation\": \"Developer\",\n    \"department\": \"\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "eid",
+      "value": ""
+    }
+  ]
+}
