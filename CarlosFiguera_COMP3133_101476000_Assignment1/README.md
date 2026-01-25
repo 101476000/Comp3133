@@ -20,7 +20,7 @@ npm install
 
 2) Create `.env` from `.env.example` and fill values:
 - `MONGODB_URI`
-- `DB_NAME` (recommended: `comp3133_101476000_assigment1`)
+- `DB_NAME` 
 - `JWT_SECRET`
 - Cloudinary variables
 
