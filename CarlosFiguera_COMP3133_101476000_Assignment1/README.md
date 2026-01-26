@@ -51,7 +51,7 @@ For `addNewEmployee` and optional photo update, send `employee_photo` as a Data 
 Create one using the `signup` mutation.
 Example:
 - username: `carlos`
-- email: `carlos@example.com`
+- email: `101476000@georgebrown.ca`
 - password: `Password123`
 
 ## Postman
