@@ -1,0 +1,126 @@
+{
+  "info": {
+    "name": "Restaurant API - Lab 3",
+    "description": "Collection of API endpoints for Restaurant Database Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Get All Restaurants",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/restaurants",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["restaurants"]
+        },
+        "description": "Returns all restaurant details with all columns"
+      }
+    },
+    {
+      "name": "2. Get Japanese Restaurants",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/restaurants/cuisine/Japanese",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["restaurants", "cuisine", "Japanese"]
+        },
+        "description": "Returns all Japanese restaurants with all columns"
+      }
+    },
+    {
+      "name": "3. Get Bakery Restaurants",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/restaurants/cuisine/Bakery",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["restaurants", "cuisine", "Bakery"]
+        },
+        "description": "Returns all Bakery restaurants with all columns"
+      }
+    },
+    {
+      "name": "4. Get Italian Restaurants",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/restaurants/cuisine/Italian",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["restaurants", "cuisine", "Italian"]
+        },
+        "description": "Returns all Italian restaurants with all columns"
+      }
+    },
+    {
+      "name": "5. Get Restaurants Sorted ASC",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/restaurants?sortBy=ASC",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["restaurants"],
+          "query": [
+            {
+              "key": "sortBy",
+              "value": "ASC"
+            }
+          ]
+        },
+        "description": "Returns restaurants sorted by restaurant_id in ascending order with selected columns"
+      }
+    },
+    {
+      "name": "6. Get Restaurants Sorted DESC",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/restaurants?sortBy=DESC",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["restaurants"],
+          "query": [
+            {
+              "key": "sortBy",
+              "value": "DESC"
+            }
+          ]
+        },
+        "description": "Returns restaurants sorted by restaurant_id in descending order with selected columns"
+      }
+    },
+    {
+      "name": "7. Get Delicatessen (Not Brooklyn)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/restaurants/Delicatessen",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["restaurants", "Delicatessen"]
+        },
+        "description": "Returns Delicatessen restaurants where city is not Brooklyn, sorted by name"
+      }
+    }
+  ]
+}
