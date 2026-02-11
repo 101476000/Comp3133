@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat App</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #f0f2f5; font-family: 'Segoe UI', sans-serif; }
+
+    /* Room selection screen */
+    #roomSelect { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .room-card { max-width: 450px; width: 100%; border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+    .room-card .card-header { background: #2c3e50; color: #fff; text-align: center; border-radius: 12px 12px 0 0 !important; padding: 20px; }
+
+    /* Chat screen */
+    #chatScreen { display: none; height: 100vh; }
+    .chat-container { display: flex; height: 100%; }
+
+    /* Sidebar */
+    .sidebar { width: 250px; background: #2c3e50; color: #fff; display: flex; flex-direction: column; }
+    .sidebar h4 { padding: 20px; margin: 0; background: #1a252f; }
+    .sidebar .room-info { padding: 15px; border-bottom: 1px solid #3d566e; }
+    .sidebar .members-list { flex: 1; padding: 15px; overflow-y: auto; }
+    .sidebar .members-list .member { padding: 6px 0; font-size: 14px; cursor: pointer; }
+    .sidebar .members-list .member:hover { color: #82c8ff; }
+    .sidebar .bottom-btns { padding: 15px; }
+    .sidebar .bottom-btns button { width: 100%; margin-bottom: 8px; }
+
+    /* Chat area */
+    .chat-area { flex: 1; display: flex; flex-direction: column; background: #fff; }
+    .chat-header { padding: 15px 20px; background: #ecf0f1; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; }
+    .messages { flex: 1; padding: 20px; overflow-y: auto; }
+    .message { margin-bottom: 15px; max-width: 75%; }
+    .message.sent { margin-left: auto; }
+    .message .msg-info { font-size: 11px; color: #888; margin-bottom: 2px; }
+    .message .msg-text { padding: 10px 14px; border-radius: 12px; word-wrap: break-word; }
+    .message.received .msg-text { background: #e8edf1; }
+    .message.sent .msg-text { background: #2c3e50; color: #fff; }
+    .message.bot .msg-text { background: #fff3cd; color: #856404; font-style: italic; }
+    .message.private .msg-text { background: #d4edda; color: #155724; }
+    .message.private.sent .msg-text { background: #28a745; color: #fff; }
+
+    /* Typing indicator */
+    #typingIndicator { padding: 5px 20px; font-size: 13px; color: #888; font-style: italic; height: 25px; }
+
+    /* Input area */
+    .input-area { padding: 15px 20px; border-top: 1px solid #ddd; display: flex; gap: 10px; }
+    .input-area input { flex: 1; }
+
+    .btn-room { background: #2c3e50; border-color: #2c3e50; color: #fff; }
+    .btn-room:hover { background: #1a252f; border-color: #1a252f; color: #fff; }
+  </style>
+</head>
+<body>
+
+  <!-- ROOM SELECTION -->
+  <div id="roomSelect">
+    <div class="card room-card">
+      <div class="card-header">
+        <h3 class="mb-0">Chat App</h3>
+      </div>
+      <div class="card-body p-4">
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input type="text" class="form-control" id="displayUser" readonly>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Room</label>
+          <select class="form-select" id="roomList">
+            <option value="devops">DevOps</option>
+            <option value="cloud computing">Cloud Computing</option>
+            <option value="covid19">COVID-19</option>
+            <option value="sports">Sports</option>
+            <option value="nodeJS">NodeJS</option>
+            <option value="news">News</option>
+          </select>
+        </div>
+        <button class="btn btn-room w-100" id="btnJoinRoom">Join Chat Room</button>
+        <button class="btn btn-outline-danger w-100 mt-2" id="btnLogoutTop">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT SCREEN -->
+  <div id="chatScreen">
+    <div class="chat-container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <h4>Chat App</h4>
+        <div class="room-info">
+          <strong>Room:</strong> <span id="currentRoom"></span>
+        </div>
+        <div class="room-info">
+          <strong>Members:</strong>
+          <div id="membersList" class="members-list"></div>
+        </div>
+        <div class="bottom-btns">
+          <button class="btn btn-warning btn-sm" id="btnLeaveRoom">Leave Room</button>
+          <button class="btn btn-danger btn-sm" id="btnLogout">Logout</button>
+        </div>
+      </div>
+
+      <!-- Chat area -->
+      <div class="chat-area">
+        <div class="chat-header">
+          <span id="chatTitle">Room Chat</span>
+          <span id="pmIndicator" class="d-none">
+            Private chat with <strong id="pmTarget"></strong>
+            <button class="btn btn-sm btn-outline-secondary ms-2" id="btnBackToRoom">Back to Room</button>
+          </span>
+        </div>
+
+        <div class="messages" id="messages"></div>
+        <div id="typingIndicator"></div>
+
+        <div class="input-area">
+          <input type="text" class="form-control" id="msgInput" placeholder="Type your message here..." autocomplete="off">
+          <button class="btn btn-room" id="btnSend">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // Auth check
+    const username = localStorage.getItem('chat_username');
+    if (!username) window.location.href = 'login.html';
+
+    // Socket setup
+    const socket = io();
+
+    // Register user
+    socket.emit('registerUser', { username });
+
+    // App state
+    let currentRoom = '';
+    let privateTarget = null;
+    let typingTimeout;
+
+    // UI init
+    $('#displayUser').val(username);
+
+    // Join room
+    $('#btnJoinRoom').on('click', function() {
+      currentRoom = $('#roomList').val();
+      socket.emit('joinRoom', { username, room: currentRoom });
+
+      $('#roomSelect').hide();
+      $('#chatScreen').show();
+      $('#currentRoom').text(currentRoom);
+      $('#chatTitle').text('Room: ' + currentRoom);
+      $('#messages').empty();
+      $('#typingIndicator').text('');
+    });
+
+    // Leave room
+    $('#btnLeaveRoom').on('click', function() {
+      socket.emit('leaveRoom');
+      privateTarget = null;
+
+      $('#typingIndicator').text('');
+      $('#chatScreen').hide();
+      $('#roomSelect').show();
+      $('#messages').empty();
+    });
+
+    // Logout
+    function logout() {
+      socket.emit('leaveRoom');
+      localStorage.removeItem('chat_username');
+      localStorage.removeItem('chat_firstname');
+      localStorage.removeItem('chat_lastname');
+      window.location.href = 'login.html';
+    }
+    $('#btnLogout').on('click', logout);
+    $('#btnLogoutTop').on('click', logout);
+
+    // Send message
+    function sendMessage() {
+      const msg = $('#msgInput').val().trim();
+      if (!msg) return;
+
+      if (privateTarget) {
+        socket.emit('privateMessage', { from_user: username, to_user: privateTarget, message: msg });
+        socket.emit('stopTypingPrivate', { to_user: privateTarget });
+      } else {
+        socket.emit('chatMessage', { username, room: currentRoom, message: msg });
+        socket.emit('stopTyping', { room: currentRoom });
+      }
+
+      $('#typingIndicator').text('');
+      $('#msgInput').val('').focus();
+    }
+
+    $('#btnSend').on('click', sendMessage);
+    $('#msgInput').on('keypress', function(e) {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    // Typing emitter
+    $('#msgInput').on('input', function() {
+      if (privateTarget) {
+        socket.emit('typingPrivate', { from_user: username, to_user: privateTarget });
+
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+          socket.emit('stopTypingPrivate', { to_user: privateTarget });
+        }, 800);
+      } else {
+        socket.emit('typing', { username, room: currentRoom });
+
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+          socket.emit('stopTyping', { room: currentRoom });
+        }, 800);
+      }
+    });
+
+    // Room typing events
+    socket.on('typing', ({ username: typingUser }) => {
+      if (!privateTarget) $('#typingIndicator').text(typingUser + ' is typing...');
+    });
+
+    socket.on('stopTyping', () => {
+      if (!privateTarget) $('#typingIndicator').text('');
+    });
+
+    // Private typing events (single listener - no duplicates)
+    socket.on('typingPrivate', ({ from_user }) => {
+      $('#typingIndicator').text(from_user + ' is typing...');
+    });
+
+    socket.on('stopTypingPrivate', () => {
+      $('#typingIndicator').text('');
+    });
+
+    // Receive group message
+    socket.on('message', (data) => {
+      if (privateTarget) return;
+
+      appendMessage(
+        data,
+        data.from_user === 'Chat App Bot'
+          ? 'bot'
+          : (data.from_user === username ? 'sent' : 'received')
+      );
+    });
+
+    // Message history
+    socket.on('messageHistory', (messages) => {
+      messages.forEach(msg => {
+        appendMessage(msg, msg.from_user === username ? 'sent' : 'received');
+      });
+    });
+
+    // Receive private message
+    socket.on('privateMessage', (data) => {
+      const isSent = data.from_user === username;
+      const cssClass = isSent ? 'private sent' : 'private';
+
+      if (privateTarget && (data.from_user === privateTarget || data.to_user === privateTarget)) {
+        appendMessage(data, cssClass);
+      } else if (!isSent) {
+        const pmFrom = data.from_user;
+        appendMessage({
+          from_user: 'Chat App Bot',
+          message: `Private message from ${pmFrom}: "${data.message}" (click their name to reply)`,
+          date_sent: data.date_sent
+        }, 'bot');
+      }
+    });
+
+    // Room users list
+    socket.on('roomUsers', (usersList) => {
+      const $list = $('#membersList');
+      $list.empty();
+
+      usersList.forEach(u => {
+        const $member = $('<div class="member"></div>').text(u.username);
+
+        if (u.username !== username) {
+          $member.attr('title', 'Click to private message');
+          $member.on('click', () => startPrivateChat(u.username));
+        }
+
+        $list.append($member);
+      });
+    });
+
+    // Private chat mode
+    function startPrivateChat(targetUser) {
+      privateTarget = targetUser;
+
+      $('#typingIndicator').text('');
+      $('#chatTitle').addClass('d-none');
+      $('#pmIndicator').removeClass('d-none');
+      $('#pmTarget').text(targetUser);
+      $('#messages').empty();
+
+      appendMessage({
+        from_user: 'Chat App Bot',
+        message: `Private chat with ${targetUser}. Messages here are only visible to you two.`,
+        date_sent: formatDate()
+      }, 'bot');
+
+      $('#msgInput').focus();
+    }
+
+    // Back to room chat
+    function switchToRoomChat() {
+      if (privateTarget) socket.emit('stopTypingPrivate', { to_user: privateTarget });
+
+      privateTarget = null;
+      $('#typingIndicator').text('');
+
+      $('#chatTitle').removeClass('d-none').text('Room: ' + currentRoom);
+      $('#pmIndicator').addClass('d-none');
+      $('#messages').empty();
+
+      if (currentRoom) socket.emit('joinRoom', { username, room: currentRoom });
+    }
+    $('#btnBackToRoom').on('click', switchToRoomChat);
+
+    // Append message
+    function appendMessage(data, type) {
+      const $msg = $('<div class="message"></div>').addClass(type);
+      const label = type.includes('private') ? `[PM] ${data.from_user}` : data.from_user;
+
+      $msg.html(`
+        <div class="msg-info">${label} &middot; ${data.date_sent || ''}</div>
+        <div class="msg-text">${escapeHtml(data.message)}</div>
+      `);
+
+      $('#messages').append($msg);
+
+      const container = document.getElementById('messages');
+      container.scrollTop = container.scrollHeight;
+    }
+
+    // XSS protection
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Date format
+    function formatDate() {
+      return new Date().toLocaleString('en-US', {
+        month: '2-digit', day: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', hour12: true
+      });
+    }
+  </script>
+</body>
+</html>
