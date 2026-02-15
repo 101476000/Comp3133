@@ -1,0 +1,229 @@
+{
+	"info": {
+		"name": "Lab04 - Mongoose Validation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01 - Insert Valid User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Leanne Graham\",\n    \"username\": \"Bret\",\n    \"email\": \"Sincere@april.biz\",\n    \"address\": {\n        \"street\": \"Kulas Light\",\n        \"suite\": \"Apt. 556\",\n        \"city\": \"Gwenborough\",\n        \"zipcode\": \"92998-3874\",\n        \"geo\": {\n            \"lat\": \"-37.3159\",\n            \"lng\": \"81.1496\"\n        }\n    },\n    \"phone\": \"1-770-736-8031\",\n    \"website\": \"http://hildegard.org\",\n    \"company\": {\n        \"name\": \"Romaguera-Crona\",\n        \"catchPhrase\": \"Multi-layered client-server neural-net\",\n        \"bs\": \"harness real-time e-markets\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/users",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["users"]
+				}
+			}
+		},
+		{
+			"name": "02 - Error: Duplicate Email",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Duplicate User\",\n    \"username\": \"DupeUser\",\n    \"email\": \"Sincere@april.biz\",\n    \"address\": {\n        \"street\": \"Test St\",\n        \"suite\": \"Apt. 1\",\n        \"city\": \"Toronto\",\n        \"zipcode\": \"12345-6789\",\n        \"geo\": {\n            \"lat\": \"10.0000\",\n            \"lng\": \"20.0000\"\n        }\n    },\n    \"phone\": \"1-123-456-7890\",\n    \"website\": \"http://test.com\",\n    \"company\": {\n        \"name\": \"Test Co\",\n        \"catchPhrase\": \"Test phrase\",\n        \"bs\": \"test bs\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/users",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["users"]
+				}
+			}
+		},
+		{
+			"name": "03 - Error: Invalid Email",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Bad Email User\",\n    \"username\": \"BadEmail\",\n    \"email\": \"not-a-valid-email\",\n    \"address\": {\n        \"street\": \"Test St\",\n        \"suite\": \"Apt. 1\",\n        \"city\": \"Toronto\",\n        \"zipcode\": \"12345-6789\",\n        \"geo\": {\n            \"lat\": \"10.0000\",\n            \"lng\": \"20.0000\"\n        }\n    },\n    \"phone\": \"1-123-456-7890\",\n    \"website\": \"http://test.com\",\n    \"company\": {\n        \"name\": \"Test Co\",\n        \"catchPhrase\": \"Test phrase\",\n        \"bs\": \"test bs\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/users",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["users"]
+				}
+			}
+		},
+		{
+			"name": "04 - Error: Username Too Short",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Short Username\",\n    \"username\": \"Ab\",\n    \"email\": \"short@test.com\",\n    \"address\": {\n        \"street\": \"Test St\",\n        \"suite\": \"Apt. 1\",\n        \"city\": \"Toronto\",\n        \"zipcode\": \"12345-6789\",\n        \"geo\": {\n            \"lat\": \"10.0000\",\n            \"lng\": \"20.0000\"\n        }\n    },\n    \"phone\": \"1-123-456-7890\",\n    \"website\": \"http://test.com\",\n    \"company\": {\n        \"name\": \"Test Co\",\n        \"catchPhrase\": \"Test phrase\",\n        \"bs\": \"test bs\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/users",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["users"]
+				}
+			}
+		},
+		{
+			"name": "05 - Error: Invalid City (numbers)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Bad City User\",\n    \"username\": \"BadCity\",\n    \"email\": \"badcity@test.com\",\n    \"address\": {\n        \"street\": \"Test St\",\n        \"suite\": \"Apt. 1\",\n        \"city\": \"Toronto123\",\n        \"zipcode\": \"12345-6789\",\n        \"geo\": {\n            \"lat\": \"10.0000\",\n            \"lng\": \"20.0000\"\n        }\n    },\n    \"phone\": \"1-123-456-7890\",\n    \"website\": \"http://test.com\",\n    \"company\": {\n        \"name\": \"Test Co\",\n        \"catchPhrase\": \"Test phrase\",\n        \"bs\": \"test bs\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/users",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["users"]
+				}
+			}
+		},
+		{
+			"name": "06 - Error: Invalid Zipcode",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Bad Zip User\",\n    \"username\": \"BadZip\",\n    \"email\": \"badzip@test.com\",\n    \"address\": {\n        \"street\": \"Test St\",\n        \"suite\": \"Apt. 1\",\n        \"city\": \"Toronto\",\n        \"zipcode\": \"ABC-123\",\n        \"geo\": {\n            \"lat\": \"10.0000\",\n            \"lng\": \"20.0000\"\n        }\n    },\n    \"phone\": \"1-123-456-7890\",\n    \"website\": \"http://test.com\",\n    \"company\": {\n        \"name\": \"Test Co\",\n        \"catchPhrase\": \"Test phrase\",\n        \"bs\": \"test bs\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/users",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["users"]
+				}
+			}
+		},
+		{
+			"name": "07 - Error: Invalid Phone",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Bad Phone User\",\n    \"username\": \"BadPhone\",\n    \"email\": \"badphone@test.com\",\n    \"address\": {\n        \"street\": \"Test St\",\n        \"suite\": \"Apt. 1\",\n        \"city\": \"Toronto\",\n        \"zipcode\": \"12345-6789\",\n        \"geo\": {\n            \"lat\": \"10.0000\",\n            \"lng\": \"20.0000\"\n        }\n    },\n    \"phone\": \"555-1234\",\n    \"website\": \"http://test.com\",\n    \"company\": {\n        \"name\": \"Test Co\",\n        \"catchPhrase\": \"Test phrase\",\n        \"bs\": \"test bs\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/users",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["users"]
+				}
+			}
+		},
+		{
+			"name": "08 - Error: Invalid Website (no http)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Bad Website User\",\n    \"username\": \"BadSite\",\n    \"email\": \"badsite@test.com\",\n    \"address\": {\n        \"street\": \"Test St\",\n        \"suite\": \"Apt. 1\",\n        \"city\": \"Toronto\",\n        \"zipcode\": \"12345-6789\",\n        \"geo\": {\n            \"lat\": \"10.0000\",\n            \"lng\": \"20.0000\"\n        }\n    },\n    \"phone\": \"1-123-456-7890\",\n    \"website\": \"ftp://invalid.com\",\n    \"company\": {\n        \"name\": \"Test Co\",\n        \"catchPhrase\": \"Test phrase\",\n        \"bs\": \"test bs\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/users",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["users"]
+				}
+			}
+		},
+		{
+			"name": "09 - Error: Missing Required Fields",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Missing Fields User\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/users",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["users"]
+				}
+			}
+		},
+		{
+			"name": "10 - Get All Users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/users",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["users"]
+				}
+			}
+		}
+	]
+}

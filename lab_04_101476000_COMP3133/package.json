@@ -1,0 +1,17 @@
+{
+  "name": "lab4_users_database",
+  "version": "1.0.0",
+  "description": "COMP3133 - Lab 04 - Mongoose Validation - Carlos Figuera - 101476000",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Carlos Figuera <101476000>",
+  "license": "ISC",
+  "keywords": [],
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mongoose": "^9.2.1"
+  }
+}
