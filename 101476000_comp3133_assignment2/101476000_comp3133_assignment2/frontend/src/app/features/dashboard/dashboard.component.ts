@@ -17,7 +17,7 @@ import { User } from '../../models/auth.model';
           </div>
           <ul class="nav-links">
             <li><a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Employees</a></li>
-            <li><a routerLink="/dashboard/add">Add Employee</a></li>
+            <li><a routerLink="/dashboard/add" routerLinkActive="active">Add Employee</a></li>
           </ul>
           <div class="user-section">
             <span class="user-name" *ngIf="currentUser">{{ currentUser.firstName }} {{ currentUser.lastName }}</span>
@@ -142,7 +142,7 @@ import { User } from '../../models/auth.model';
         justify-content: space-between;
       }
     }
-  `],
+  `]
 })
 export class DashboardComponent implements OnInit {
   private authService = inject(AuthService);
