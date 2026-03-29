@@ -1,7 +1,7 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptors } from '@angular/platform-browser/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApolloClientOptions, ApolloLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client/core';
 import { provideApollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
@@ -12,25 +12,26 @@ import { authInterceptor } from './app/core/interceptors/auth.interceptor';
 
 export function apolloClientFactory(httpLink: HttpLink): ApolloClientOptions<NormalizedCacheObject> {
   const errorLink = onError(({ graphQLErrors, networkError }) => {
-    if (graphQLErrors)
-      graphQLErrors.forEach(({ message, locations, path }) =>
-        console.log(
-          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-        ),
-      );
-    if (networkError) console.log(`[Network error]: ${networkError}`);
+    if (graphQLErrors) {
+      graphQLErrors.forEach(({ message, locations, path }) => {
+        console.error(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
+      });
+    }
+    if (networkError) {
+      console.error(`[Network error]: ${networkError}`);
+    }
   });
 
   return {
     link: ApolloLink.from([
       errorLink,
       httpLink.create({
-        uri: 'http://localhost:4000/graphql',
+        uri: 'https://your-backend-url.com/graphql',
         credentials: 'include',
       }),
     ]),
     cache: new InMemoryCache(),
-    connectToDevTools: true,
+    connectToDevTools: false,
   };
 }
 

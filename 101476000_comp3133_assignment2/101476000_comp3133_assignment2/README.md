@@ -7,7 +7,7 @@ Angular-based Employee Management System with GraphQL backend, featuring authent
 
 ---
 
-## Project Overview
+## 📋 Project Overview
 
 This is a **Full Stack Application** consisting of:
 
@@ -18,28 +18,28 @@ This is a **Full Stack Application** consisting of:
 
 ---
 
-## Features
+## ✨ Features
 
-**User Authentication**
+✅ **User Authentication**
 - Login with email and password
 - Signup with form validation
 - Session management with JWT tokens stored in localStorage
 - Protected routes with auth guards
 
-**Employee Management**
+✅ **Employee Management**
 - View all employees in a responsive table
 - Add new employees with form validation
 - Edit employee information
 - Delete employees with confirmation
 - View detailed employee information in modal
 
-**Search & Filter**
+✅ **Search & Filter**
 - Filter employees by department
 - Filter employees by position
 - Search by name or email
 - Real-time filtering
 
-**Professional UI/UX**
+✅ **Professional UI/UX**
 - Material Design aesthetics
 - Responsive design (mobile, tablet, desktop)
 - Smooth animations and transitions
@@ -48,7 +48,7 @@ This is a **Full Stack Application** consisting of:
 
 ---
 
-## Project Structure
+## 🏗️ Project Structure
 
 ```
 101476000_comp3133_assignment2/
@@ -102,7 +102,7 @@ This is a **Full Stack Application** consisting of:
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -148,7 +148,7 @@ NODE_ENV=development
 
 ---
 
-## Running the Application
+## 🏃 Running the Application
 
 ### Development Mode
 
@@ -181,7 +181,7 @@ This will start:
 
 ---
 
-## Authentication
+## 🔐 Authentication
 
 ### Default Credentials (Development)
 
@@ -199,7 +199,7 @@ The system uses JWT authentication. After signup, users can login with their cre
 
 ---
 
-## Database Schema
+## 📊 Database Schema
 
 ### Employee Collection
 
@@ -240,7 +240,7 @@ The system uses JWT authentication. After signup, users can login with their cre
 
 ---
 
-## GraphQL API Endpoints
+## 📡 GraphQL API Endpoints
 
 ### Queries
 
@@ -329,7 +329,7 @@ mutation DeleteEmployee($id: ID!) {
 
 ---
 
-## UI Components
+## 🎨 UI Components
 
 ### Pages
 
@@ -367,7 +367,7 @@ mutation DeleteEmployee($id: ID!) {
 
 ---
 
-## Responsive Design
+## 📱 Responsive Design
 
 The application is fully responsive with breakpoints:
 
@@ -377,7 +377,7 @@ The application is fully responsive with breakpoints:
 
 ---
 
-## API Integration
+## 🔄 API Integration
 
 ### Apollo Client Configuration
 
@@ -400,7 +400,7 @@ The frontend uses Apollo Client for GraphQL integration:
 
 ---
 
-## Form Validation
+## 📝 Form Validation
 
 ### Login Form
 - Email: Required, valid email format
@@ -429,7 +429,7 @@ The frontend uses Apollo Client for GraphQL integration:
 
 ---
 
-## Deployment
+## 🚢 Deployment
 
 ### Deploy to Vercel
 
@@ -482,7 +482,7 @@ The frontend uses Apollo Client for GraphQL integration:
 
 ---
 
-## Testing
+## 🧪 Testing
 
 ### Manual Testing Checklist
 
@@ -549,7 +549,7 @@ http-server dist/101476000-comp3133-assignment2 -p 4200
 
 ---
 
-## Assignment Requirements Checklist
+## 📝 Assignment Requirements Checklist
 
 - [x] Application Setup with proper folder structure
 - [x] GitHub repository with regular commits
@@ -571,7 +571,7 @@ http-server dist/101476000-comp3133-assignment2 -p 4200
 
 ---
 
-## Troubleshooting
+## 🐛 Troubleshooting
 
 ### Port Already in Use
 ```bash
@@ -600,7 +600,7 @@ localStorage.removeItem('apollo-cache-persist');
 
 ---
 
-## Additional Resources
+## 📚 Additional Resources
 
 - [Angular Documentation](https://angular.io)
 - [Apollo Client Documentation](https://www.apollographql.com/docs/react/)
@@ -610,21 +610,21 @@ localStorage.removeItem('apollo-cache-persist');
 
 ---
 
-## Author
+## 👨‍💻 Author
 
 **Carlos Figuera**  
 Student ID: 101476000  
-George Brown College
+George Brown College - Toronto
 
 ---
 
-## License
+## 📄 License
 
 MIT License - Feel free to use this project for educational purposes.
 
 ---
 
-## Notes for Submission
+## 🎓 Notes for Submission
 
 This project fulfills all requirements for COMP3133 Assignment 2:
 1. ✅ Proper project structure with frontend and backend folders
@@ -636,5 +636,10 @@ This project fulfills all requirements for COMP3133 Assignment 2:
 7. ✅ Docker containerization
 8. ✅ Ready for Vercel deployment
 
-**GitHub Repository**: https://github.com/101476000/Comp3133.git
+**Live Demo**: [Update with your Vercel URL]
+**GitHub Repository**: [Update with your GitHub URL]
 
+---
+
+**Last Updated**: March 2024
+**Version**: 1.0.0

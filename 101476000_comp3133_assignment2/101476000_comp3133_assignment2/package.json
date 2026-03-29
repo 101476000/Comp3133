@@ -1,0 +1,10 @@
+{
+  "name": "101476000-comp3133-assignment2",
+  "private": true,
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
