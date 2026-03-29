@@ -2,9 +2,9 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ApolloClientOptions, ApolloLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client/core';
-import { provideApollo } from 'apollo-angular';
+import { APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
+import { ApolloClientOptions, ApolloLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client/core';
 import { onError } from '@apollo/client/link/error';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
@@ -41,6 +41,10 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes),
     provideAnimations(),
     provideHttpClient(withInterceptors([authInterceptor])),
-    provideApollo(apolloClientFactory)
+    {
+      provide: APOLLO_OPTIONS,
+      useFactory: apolloClientFactory,
+      deps: [HttpLink]
+    }
   ]
 }).catch((err) => console.error(err));
