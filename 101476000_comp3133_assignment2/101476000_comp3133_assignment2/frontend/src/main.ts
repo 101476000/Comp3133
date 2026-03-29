@@ -27,7 +27,7 @@ export function apolloClientFactory(httpLink: HttpLink): ApolloClientOptions<Nor
     link: ApolloLink.from([
       errorLink,
       httpLink.create({
-        uri: 'http://localhost:4000/graphql',
+        uri: 'https://your-backend-url.com/graphql',
         withCredentials: true
       })
     ]),
