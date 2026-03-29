@@ -1,0 +1,6 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/101476000-comp3133-assignment2",
+  "framework": "angular",
+  "nodeVersion": "18.x"
+}

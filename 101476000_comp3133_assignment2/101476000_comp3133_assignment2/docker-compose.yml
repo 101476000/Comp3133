@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: development
+      MONGODB_URI: mongodb+srv://admin:admin@cluster.mongodb.net/employees
+      JWT_SECRET: your_jwt_secret_key_change_in_production
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - mongodb
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "4200:4200"
+    environment:
+      GRAPHQL_ENDPOINT: http://localhost:4000/graphql
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+  mongodb:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
+
+networks:
+  default:
+    name: employee-network
