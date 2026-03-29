@@ -8,7 +8,7 @@ import { AuthService } from './services/auth.service';
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = (_, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
@@ -16,14 +16,13 @@ export const authGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  router.navigate(['/login'], {
-    queryParams: { returnUrl: state.url },
+  return router.createUrlTree(['/login'], {
+    queryParams: { returnUrl: state.url }
   });
-  return false;
 };
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   {
@@ -33,8 +32,8 @@ export const routes: Routes = [
     children: [
       { path: '', component: EmployeeListComponent },
       { path: 'add', component: EmployeeFormComponent },
-      { path: 'edit/:id', component: EmployeeFormComponent },
-    ],
+      { path: 'edit/:id', component: EmployeeFormComponent }
+    ]
   },
-  { path: '**', redirectTo: '/dashboard' },
+  { path: '**', redirectTo: '/login' }
 ];
