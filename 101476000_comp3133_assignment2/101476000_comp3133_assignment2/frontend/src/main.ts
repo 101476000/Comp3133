@@ -10,7 +10,7 @@ import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 import { authInterceptor } from './app/core/interceptors/auth.interceptor';
 
-const BACKEND_URL = (window as any).__BACKEND_URL__ || 'https://your-railway-backend.up.railway.app/graphql';
+const BACKEND_URL = (window as any).__BACKEND_URL__ || 'https://comp3133-backend-zf2n.onrender.com/graphql';
 
 export function apolloClientFactory(httpLink: HttpLink): ApolloClientOptions<NormalizedCacheObject> {
   const errorLink = onError(({ graphQLErrors, networkError }) => {
