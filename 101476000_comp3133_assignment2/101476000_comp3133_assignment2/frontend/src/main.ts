@@ -10,41 +10,42 @@ import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 import { authInterceptor } from './app/core/interceptors/auth.interceptor';
 
+const BACKEND_URL = (window as any).__BACKEND_URL__ || 'https://your-railway-backend.up.railway.app/graphql';
+
 export function apolloClientFactory(httpLink: HttpLink): ApolloClientOptions<NormalizedCacheObject> {
   const errorLink = onError(({ graphQLErrors, networkError }) => {
-    if (graphQLErrors) {
-      graphQLErrors.forEach(({ message, locations, path }) => {
-        console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
-      });
-    }
+      if (graphQLErrors) {
+            graphQLErrors.forEach(({ message, locations, path }) => {
+                    console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
+                          });
+                              }
+                                  if (networkError) {
+                                        console.log(`[Network error]: ${networkError}`);
+                                            }
+                                              });
 
-    if (networkError) {
-      console.log(`[Network error]: ${networkError}`);
-    }
-  });
+                                                return {
+                                                    link: ApolloLink.from([
+                                                          errorLink,
+                                                                httpLink.create({
+                                                                        uri: BACKEND_URL,
+                                                                                withCredentials: true
+                                                                                      })
+                                                                                          ]),
+                                                                                              cache: new InMemoryCache(),
+                                                                                                  connectToDevTools: true
+                                                                                                    };
+                                                                                                    }
 
-  return {
-    link: ApolloLink.from([
-      errorLink,
-      httpLink.create({
-        uri: 'https://your-backend-url.com/graphql',
-        withCredentials: true
-      })
-    ]),
-    cache: new InMemoryCache(),
-    connectToDevTools: true
-  };
-}
-
-bootstrapApplication(AppComponent, {
-  providers: [
-    provideRouter(routes),
-    provideAnimations(),
-    provideHttpClient(withInterceptors([authInterceptor])),
-    {
-      provide: APOLLO_OPTIONS,
-      useFactory: apolloClientFactory,
-      deps: [HttpLink]
-    }
-  ]
-}).catch((err) => console.error(err));;
+                                                                                                    bootstrapApplication(AppComponent, {
+                                                                                                      providers: [
+                                                                                                          provideRouter(routes),
+                                                                                                              provideAnimations(),
+                                                                                                                  provideHttpClient(withInterceptors([authInterceptor])),
+                                                                                                                      {
+                                                                                                                            provide: APOLLO_OPTIONS,
+                                                                                                                                  useFactory: apolloClientFactory,
+                                                                                                                                        deps: [HttpLink]
+                                                                                                                                            }
+                                                                                                                                              ]
+                                                                                                                                              }).catch((err) => console.error(err));
