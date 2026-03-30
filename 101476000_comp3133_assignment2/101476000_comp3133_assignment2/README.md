@@ -116,5 +116,5 @@ The application includes user authentication, employee creation and management, 
 
 ---
 
-**Last Updated**: March 2024
+**Last Updated**: March 2026
 **Version**: 1.0.0
