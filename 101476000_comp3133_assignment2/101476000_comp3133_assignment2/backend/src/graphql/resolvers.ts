@@ -1,159 +1,107 @@
-import { AuthenticationError } from 'apollo-server-express';
+import { AuthenticationError, UserInputError } from 'apollo-server-express';
+import jwt from 'jsonwebtoken';
+import { User } from '../models/User';
+import { Employee } from '../models/Employee';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+
+function generateToken(userId: string): string {
+    return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' });
+}
+
+function verifyToken(token: string): any {
+    try {
+          return jwt.verify(token, JWT_SECRET);
+    } catch {
+          return null;
+    }
+}
 
 export const resolvers = {
-  Query: {
-    currentUser: async (_: any, __: any, context: any) => {
-      if (!context.user) {
-        throw new AuthenticationError('User not authenticated');
-      }
-      // Return current user from database
-      return context.user;
+    Query: {
+          currentUser: async (_: any, __: any, context: any) => {
+                  if (!context.user) throw new AuthenticationError('User not authenticated');
+                  return await User.findById(context.user.userId);
+          },
+
+          employees: async (
+                  _: any,
+            { department, position }: { department?: string; position?: string },
+                  context: any
+                ) => {
+                  if (!context.user) throw new AuthenticationError('User not authenticated');
+                  const query: any = {};
+                  if (department) query.department = department;
+                  if (position) query.position = position;
+                  return await Employee.find(query).sort({ createdAt: -1 });
+          },
+
+          employee: async (_: any, { id }: { id: string }, context: any) => {
+                  if (!context.user) throw new AuthenticationError('User not authenticated');
+                  const emp = await Employee.findById(id);
+                  if (!emp) throw new UserInputError('Employee not found');
+                  return emp;
+          },
+
+          searchEmployees: async (_: any, { query }: { query: string }, context: any) => {
+                  if (!context.user) throw new AuthenticationError('User not authenticated');
+                  return await Employee.find({
+                            $or: [
+                              { firstName: { $regex: query, $options: 'i' } },
+                              { lastName: { $regex: query, $options: 'i' } },
+                              { email: { $regex: query, $options: 'i' } },
+                                      ],
+                  }).sort({ createdAt: -1 });
+          },
     },
 
-    employees: async (
-      _: any,
-      { department, position }: { department?: string; position?: string },
-      context: any
-    ) => {
-      if (!context.user) {
-        throw new AuthenticationError('User not authenticated');
-      }
-      // Fetch employees from MongoDB with optional filters
-      // const query: any = {};
-      // if (department) query.department = department;
-      // if (position) query.position = position;
-      // return await Employee.find(query);
-      return [];
-    },
+    Mutation: {
+          login: async (_: any, { email, password }: { email: string; password: string }) => {
+                  const user = await User.findOne({ email: email.toLowerCase() });
+                  if (!user) throw new AuthenticationError('Invalid email or password');
+                  const valid = await user.comparePassword(password);
+                  if (!valid) throw new AuthenticationError('Invalid email or password');
+                  const token = generateToken(user._id.toString());
+                  return { token, user };
+          },
 
-    employee: async (_: any, { id }: { id: string }, context: any) => {
-      if (!context.user) {
-        throw new AuthenticationError('User not authenticated');
-      }
-      // Fetch single employee from MongoDB
-      // return await Employee.findById(id);
-      return null;
-    },
+          signup: async (
+                  _: any,
+            { email, password, firstName, lastName }: { email: string; password: string; firstName: string; lastName: string }
+                ) => {
+                  const existing = await User.findOne({ email: email.toLowerCase() });
+                  if (existing) throw new UserInputError('User already exists with this email');
+                  const user = new User({ email, password, firstName, lastName });
+                  await user.save();
+                  const token = generateToken(user._id.toString());
+                  return { token, user };
+          },
 
-    searchEmployees: async (
-      _: any,
-      { query }: { query: string },
-      context: any
-    ) => {
-      if (!context.user) {
-        throw new AuthenticationError('User not authenticated');
-      }
-      // Search employees in MongoDB
-      // return await Employee.find({
-      //   $or: [
-      //     { firstName: { $regex: query, $options: 'i' } },
-      //     { lastName: { $regex: query, $options: 'i' } },
-      //     { email: { $regex: query, $options: 'i' } }
-      //   ]
-      // });
-      return [];
-    },
-  },
+          logout: async () => true,
 
-  Mutation: {
-    login: async (
-      _: any,
-      { email, password }: { email: string; password: string }
-    ) => {
-      // Validate credentials and generate JWT token
-      // const user = await User.findOne({ email });
-      // if (!user || !await bcrypt.compare(password, user.password)) {
-      //   throw new AuthenticationError('Invalid credentials');
-      // }
-      // const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-      // return { token, user };
-      throw new Error('Not implemented');
-    },
+          createEmployee: async (_: any, args: any, context: any) => {
+                  if (!context.user) throw new AuthenticationError('User not authenticated');
+                  const existing = await Employee.findOne({ email: args.email.toLowerCase() });
+                  if (existing) throw new UserInputError('Employee with this email already exists');
+                  const employee = new Employee(args);
+                  await employee.save();
+                  return employee;
+          },
 
-    signup: async (
-      _: any,
-      {
-        email,
-        password,
-        firstName,
-        lastName,
-      }: {
-        email: string;
-        password: string;
-        firstName: string;
-        lastName: string;
-      }
-    ) => {
-      // Create new user in MongoDB and generate JWT token
-      throw new Error('Not implemented');
-    },
+          updateEmployee: async (_: any, { id, ...updates }: any, context: any) => {
+                  if (!context.user) throw new AuthenticationError('User not authenticated');
+                  const employee = await Employee.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+                  if (!employee) throw new UserInputError('Employee not found');
+                  return employee;
+          },
 
-    logout: async (_: any, __: any, context: any) => {
-      // Invalidate token or clear session
-      return true;
+          deleteEmployee: async (_: any, { id }: { id: string }, context: any) => {
+                  if (!context.user) throw new AuthenticationError('User not authenticated');
+                  const employee = await Employee.findByIdAndDelete(id);
+                  if (!employee) throw new UserInputError('Employee not found');
+                  return employee;
+          },
     },
-
-    createEmployee: async (
-      _: any,
-      {
-        firstName,
-        lastName,
-        email,
-        phone,
-        department,
-        position,
-        salary,
-        joinDate,
-        address,
-        city,
-        country,
-        profilePicture,
-      }: any,
-      context: any
-    ) => {
-      if (!context.user) {
-        throw new AuthenticationError('User not authenticated');
-      }
-      // Create new employee in MongoDB
-      // const employee = new Employee({
-      //   firstName,
-      //   lastName,
-      //   email,
-      //   phone,
-      //   department,
-      //   position,
-      //   salary,
-      //   joinDate,
-      //   address,
-      //   city,
-      //   country,
-      //   profilePicture
-      // });
-      // await employee.save();
-      // return employee;
-      throw new Error('Not implemented');
-    },
-
-    updateEmployee: async (
-      _: any,
-      { id, ...updates }: any,
-      context: any
-    ) => {
-      if (!context.user) {
-        throw new AuthenticationError('User not authenticated');
-      }
-      // Update employee in MongoDB
-      // return await Employee.findByIdAndUpdate(id, updates, { new: true });
-      throw new Error('Not implemented');
-    },
-
-    deleteEmployee: async (_: any, { id }: { id: string }, context: any) => {
-      if (!context.user) {
-        throw new AuthenticationError('User not authenticated');
-      }
-      // Delete employee from MongoDB
-      // return await Employee.findByIdAndDelete(id);
-      throw new Error('Not implemented');
-    },
-  },
 };
+
+export { verifyToken };
